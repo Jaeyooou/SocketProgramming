@@ -16,7 +16,7 @@ int main(int argc , char *argv[]){
     struct sockaddr_in serv_address;
 	char message[25];
 	int str_len;
-    
+    printf("my address : %d",)
     printf("number of parameter : %d\n" , argc);
     printf("value is %s\n" , argv[1]);
     
@@ -54,6 +54,13 @@ int main(int argc , char *argv[]){
 	printf("Binding error\n");
 	return 0;
 	}
+	printf("create TCP socket(%d :%d) done\n" ,htonl( INADDR_ANY) , atoi(argv[1]));
+	if(listen(serv_socket ,5) == -1)
+	{
+		printf("Listening error\n");
+		return 0;
+	}
+	
 
 	
 		
