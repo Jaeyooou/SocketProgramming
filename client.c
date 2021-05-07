@@ -25,11 +25,11 @@ int main(int argc , char *argv[]){
 	}
 	strcpy(name , argv[4]);
 	printf("Client name : %s\n",name);
-	if(strcmp(argv[1] , "TCP") == 0){ //TCP
+	if(strcmp(argv[1] , "TCP") == 0 || strcmp(argv[1] , "tcp")== 0){ //TCP
 		printf("This Connection protocol is TCP\n");
 		clnt_socket = socket(AF_INET , SOCK_STREAM , 0);
 	}
-	else{ // UDP
+	else if(strcmp(argv[1],"UDP") == 0 || strcmp(argv[1],"udp")==0){ // UDP
 		printf("This Connection protocol is UDP\n");
 		clnt_socket = socket(AF_INET,SOCK_DGRAM,0);
 	}
