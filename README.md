@@ -2,7 +2,8 @@ This is ComputerNetwork Assignment2
 OS: ubuntu
 Socket Programming with C language
 
-
+server ip_address : 192.168.0.45
+client ip_address : 192.168.0.46
 --- vim setting - ----
 
 
