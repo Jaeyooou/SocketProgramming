@@ -74,17 +74,20 @@ int main(int argc , char *argv[]){
                 printf("receive Error\n");
                 return 0;
             }
-            printf("from %s : %s\n",inet_ntoa(clnt_address.sin_addr) , receive_message);
-            
-            if(strcmp(receive_message , "q") == 0 || strcmp(receive_message , "quit") == 0){
+            if (strcmp(receive_message, "q\n") == 0 || strcmp(receive_message, "quit\n") == 0) {
                 printf("Chatting quit!\n");
                 return 0;
             }
+            printf("from %s : %s\n",inet_ntoa(clnt_address.sin_addr) , receive_message);
+            
+            
             // init receive_message buffer , send_message buffer
             memset(receive_message , 0 , sizeof(receive_message));
             memset(send_message , 0 , sizeof(send_message));
             // input server message
+            printf("[server]:");
             fgets(send_message , BUFSIZE , stdin);
+
             if(strcmp(send_message , "q") == 0 || strcmp(send_message , "quit") == 0){
                 printf("Chatting quit!\n");
                 return 0;
@@ -96,11 +99,9 @@ int main(int argc , char *argv[]){
             }
             
             
-            close(client_socket);
-            close(serv_socket);
         }
-    
-               }
+      
+        }
     
     
 //--------------------TCP Protocol--------------------------------------------
@@ -113,7 +114,9 @@ int main(int argc , char *argv[]){
         }
 
     }
-    
+    close(client_socket);
+    close(serv_socket);
+
     
 }
 
