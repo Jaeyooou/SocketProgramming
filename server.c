@@ -126,10 +126,9 @@ int main(int argc , char *argv[]){
 		printf("create UDP socket(%d :%d) done\n" ,htonl( INADDR_ANY) ,atoi(argv[2]));
 		while(1){
 			memset(receive_message , 0 , sizeof(receive_message));
-			ssize_t Received_num = read(client_socket , receive_message , BUFSIZE);
-			while(Received_num == -1){
-				printf("recieving\n");
-			}
+			int clnt_address_size = sizeof(clnt_address);
+			ssize_t Received_num = recvfrom(serv_socket , receive_message , BUFSIZE , 0 , (struct sockaddr*)&clnt_address,&clnt_address_size);
+		
 			if(strcmp(receive_message , "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
 			printf("Chat is over \n");
 			return 0;
@@ -141,13 +140,13 @@ int main(int argc , char *argv[]){
 			//input message
 			printf("[server] : ");
 			fgets(send_message , BUFSIZE , stdin);
-			ssize_t send_num = write(client_socket , send_message , BUFSIZE);
+			ssize_t send_num = sendto(serv_socket , send_message , BUFSIZE , 0 , (struct sockaddr*)&clnt_address , sizeof(clnt_address));
 			if(send_num == -1){
 				printf("Send Error!\n");
 				return 0;
 			}
 			
-			if(strcmp(receive_message , "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
+			if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
 				printf("chat is over!\n");
 				return 0;
 				}

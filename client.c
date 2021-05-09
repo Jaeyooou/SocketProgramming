@@ -93,6 +93,7 @@ int main(int argc , char *argv[]){
 		//	ssize_t send_num = write(clnt_socket , send_message , BUFSIZE);
 		//	why use sendto() instead of write()? -> can`t select end-point
 			ssize_t send_num = sendto(clnt_socket,send_message , strlen(send_message) , 0 , (struct sockaddr *)&serv_address , sizeof(serv_address)); 
+			
 			if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
 				printf("chat is over!\n");
 				return 0;
@@ -102,8 +103,9 @@ int main(int argc , char *argv[]){
 				return 0;
 			}
 			ssize_t read_num = read(clnt_socket , receive_message , BUFSIZE);
-			while(read_num == -1){
-				printf("Receiving\n");
+			if(strcmp(receive_message,  "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
+				printf("chat is over!\n");
+				return 0;
 			}
 			printf("[server]:%s : %s\n",inet_ntoa(serv_address.sin_addr) , receive_message);
 			memset(receive_message , 0 , sizeof(receive_message));
