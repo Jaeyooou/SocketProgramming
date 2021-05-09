@@ -84,12 +84,15 @@ int main(int argc , char *argv[]){
 		serv_address.sin_family = AF_INET;
 		serv_address.sin_addr.s_addr = inet_addr(argv[2]);
 		serv_address.sin_port = htons(atoi(argv[3]));
+		
 		while(1){
 			printf("[%s]:",name);
 			memset(send_message , 0 , BUFSIZE);
 			fgets(send_message , BUFSIZE , stdin);
 			send_len = strlen(send_message);
-			ssize_t send_num = write(clnt_socket , send_message , BUFSIZE);
+		//	ssize_t send_num = write(clnt_socket , send_message , BUFSIZE);
+		//	why use sendto() instead of write()? -> can`t select end-point
+			ssize_t send_num = sendto(clnt_socket,send_message , strlen(send_message) , 0 , (struct sockaddr *)&serv_address , sizeof(serv_address)); 
 			if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
 				printf("chat is over!\n");
 				return 0;
