@@ -71,8 +71,8 @@ int main(int argc , char *argv[]){
             memset(receive_message , 0 , sizeof(receive_message));
             ssize_t Received_num = read(client_socket , receive_message , BUFSIZE);
             if(Received_num == -1){
-                printf("receive Error\n");
-                return 0;
+                printf("receiving\n");
+				return 0;
             }
             if (strcmp(receive_message, "q\n") == 0 || strcmp(receive_message, "quit\n") == 0) {
                 printf("Chatting quit!\n");
@@ -112,6 +112,48 @@ int main(int argc , char *argv[]){
             printf("Socket Error\n");
             return 0;
         }
+		
+		memset(&serv_address ,0 , sizeof(serv_address)); 
+		serv_address.sin_family = AF_INET; // IPv4
+        serv_address.sin_addr.s_addr = htonl(INADDR_ANY); // htonl,htons :     convert little endian to big endian , INADDR_ANY :my ipAdress
+        serv_address.sin_port = htons(atoi(argv[2]));
+  
+        if(bind(serv_socket , (struct sockaddr*)&serv_address,sizeof(serv_address)) == -1){
+       		 printf("Binding error\n");
+         	 return 0;
+        }
+         
+		printf("create UDP socket(%d :%d) done\n" ,htonl( INADDR_ANY) ,atoi(argv[2]));
+		while(1){
+			memset(receive_message , 0 , sizeof(receive_message));
+			ssize_t Received_num = read(client_socket , receive_message , BUFSIZE);
+			while(Received_num == -1){
+				printf("recieving\n");
+			}
+			if(strcmp(receive_message , "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
+			printf("Chat is over \n");
+			return 0;
+			}
+			printf("[client]from %s : %s\n" ,inet_ntoa(clnt_address.sin_addr) , receive_message);
+
+			memset(receive_message , 0 , sizeof(receive_message));
+			memset(send_message , 0 , sizeof(send_message));
+			//input message
+			printf("[server] : ");
+			fgets(send_message , BUFSIZE , stdin);
+			ssize_t send_num = write(client_socket , send_message , BUFSIZE);
+			if(send_num == -1){
+				printf("Send Error!\n");
+				return 0;
+			}
+			
+			if(strcmp(receive_message , "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
+				printf("chat is over!\n");
+				return 0;
+				}
+					
+		}
+
 
     }
     close(client_socket);

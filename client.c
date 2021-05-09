@@ -64,7 +64,7 @@ int main(int argc , char *argv[]){
 				printf("Read Error\n");
 				return 0;
 			}
-            if(strcmp(receive_message , "quit") == 0 || strcmp(receive_message , "q") == 0){
+            if(strcmp(receive_message , "quit\n") == 0 || strcmp(receive_message , "q\n") == 0){
                 printf("chatting is over\n");
                 return 0;
             }
@@ -80,6 +80,34 @@ int main(int argc , char *argv[]){
             printf("Socket Error\n");
             return 0;
         }
+		memset(&serv_address , 0 , sizeof(serv_address));
+		serv_address.sin_family = AF_INET;
+		serv_address.sin_addr.s_addr = inet_addr(argv[2]);
+		serv_address.sin_port = htons(atoi(argv[3]));
+		while(1){
+			printf("[%s]:",name);
+			memset(send_message , 0 , BUFSIZE);
+			fgets(send_message , BUFSIZE , stdin);
+			send_len = strlen(send_message);
+			ssize_t send_num = write(clnt_socket , send_message , BUFSIZE);
+			if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
+				printf("chat is over!\n");
+				return 0;
+			}
+			if(send_num == -1){
+				printf("Write Error!\n");
+				return 0;
+			}
+			ssize_t read_num = read(clnt_socket , receive_message , BUFSIZE);
+			while(read_num == -1){
+				printf("Receiving\n");
+			}
+			printf("[server]:%s : %s\n",inet_ntoa(serv_address.sin_addr) , receive_message);
+			memset(receive_message , 0 , sizeof(receive_message));
+
+
+		}
+
     }
    
     
