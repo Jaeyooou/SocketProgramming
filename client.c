@@ -58,6 +58,12 @@ int main(int argc , char *argv[]){
                 printf("Write Error!\n");
                 return 0;
             }
+			ssize_t read_num = read(clnt_socket , receive_message , BUFSIZE);
+	
+			if(read_num == -1){
+				printf("Read Error\n");
+				return 0;
+			}
             if(strcmp(receive_message , "quit") == 0 || strcmp(receive_message , "q") == 0){
                 printf("chatting is over\n");
                 return 0;
