@@ -41,7 +41,12 @@ int main(int argc , char *argv[]){
         printf("Connection error\n");
         return 0;
         }
-
+	memset(send_message , 0 , BUFSIZE);
+	strcpy(send_message , name);
+	if(write(clnt_socket , send_message , BUFSIZE) == -1){
+		printf("Write Error!\n");
+		return 0;
+		}	
         printf("chatting start , if you want to exit input 'q' or 'quit' \n");
         while(1){
             //init message

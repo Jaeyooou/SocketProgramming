@@ -20,6 +20,7 @@ int main(int argc , char *argv[]){
     char receive_message[BUFSIZE] , send_message[BUFSIZE]; // chatting message re
     int str_len;
     int clnt_address_size;
+    char client_name[50];
    // printf("my address : %d",)
     
     if(argc != 3){
@@ -65,20 +66,28 @@ int main(int argc , char *argv[]){
             return 0;
         }
         printf("Enter Client\n");
-        printf("Connected from %s:%d\n" ,inet_ntoa(clnt_address.sin_addr),ntohs(clnt_address.sin_port));
+	memset(receive_message , 0 , sizeof(receive_message));
+	if(read(client_socket , receive_message , BUFSIZE) == -1){
+		printf("Read Error!\n");
+		return 0;	
+}
+	strcpy(client_name , receive_message);
+	
+	
+        printf("Connected [%s]from %s:%d\n" ,client_name , inet_ntoa(clnt_address.sin_addr),ntohs(clnt_address.sin_port));
         while(1){
             //read() from client
             memset(receive_message , 0 , sizeof(receive_message));
             ssize_t Received_num = read(client_socket , receive_message , BUFSIZE);
             if(Received_num == -1){
-                printf("receiving\n");
+                printf("Read Error!\n");
 				return 0;
             }
             if (strcmp(receive_message, "q\n") == 0 || strcmp(receive_message, "quit\n") == 0) {
                 printf("Chatting quit!\n");
                 return 0;
             }
-            printf("from %s : %s\n",inet_ntoa(clnt_address.sin_addr) , receive_message);
+            printf("from[%s] %s : %s\n",client_name , inet_ntoa(clnt_address.sin_addr) , receive_message);
             
             
             // init receive_message buffer , send_message buffer
