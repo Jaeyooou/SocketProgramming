@@ -53,6 +53,7 @@ int main(int argc , char *argv[]){
             printf("[%s]:",name);
             memset(send_message , 0 , BUFSIZE);
             fgets(send_message , BUFSIZE , stdin);
+			printf("\n");
             if(strcmp(send_message , "quit") == 0 || strcmp(send_message , "q") == 0){
                 printf("chatting is over\n");
                 return 0;
@@ -94,7 +95,9 @@ int main(int argc , char *argv[]){
 			printf("[%s]:",name);
 			memset(send_message , 0 , BUFSIZE);
 			fgets(send_message , BUFSIZE , stdin);
+			printf("\n");
 			send_len = strlen(send_message);
+			ssize_t semd_num = sendto(clnt_socket , name , strlen(name) , 0 , (struct sockaddr *)&serv_address , sizeof(serv_address));
 		//	ssize_t send_num = write(clnt_socket , send_message , BUFSIZE);
 		//	why use sendto() instead of write()? -> can`t select end-point
 			ssize_t send_num = sendto(clnt_socket,send_message , strlen(send_message) , 0 , (struct sockaddr *)&serv_address , sizeof(serv_address)); 

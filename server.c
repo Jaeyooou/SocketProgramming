@@ -96,7 +96,7 @@ int main(int argc , char *argv[]){
             // input server message
             printf("[server]:");
             fgets(send_message , BUFSIZE , stdin);
-
+			printf("\n");
             if(strcmp(send_message , "q") == 0 || strcmp(send_message , "quit") == 0){
                 printf("Chatting quit!\n");
                 return 0;
@@ -127,28 +127,34 @@ int main(int argc , char *argv[]){
         serv_address.sin_addr.s_addr = htonl(INADDR_ANY); // htonl,htons :     convert little endian to big endian , INADDR_ANY :my ipAdress
         serv_address.sin_port = htons(atoi(argv[2]));
   
-        if(bind(serv_socket , (struct sockaddr*)&serv_address,sizeof(serv_address)) == -1){
+        if(bind(serv_socket , (struct sockaddr *)&serv_address,sizeof(serv_address)) == -1){
        		 printf("Binding error\n");
          	 return 0;
         }
          
 		printf("create UDP socket(%d :%d) done\n" ,htonl( INADDR_ANY) ,atoi(argv[2]));
 		while(1){
+			int k = 0;
 			memset(receive_message , 0 , sizeof(receive_message));
 			int clnt_address_size = sizeof(clnt_address);
-			ssize_t Received_num = recvfrom(serv_socket , receive_message , BUFSIZE , 0 , (struct sockaddr*)&clnt_address,&clnt_address_size);
-		
+			ssize_t Received_num1 = recvfrom(serv_socket , receive_message , BUFSIZE , 0 , (struct sockaddr *)&clnt_address,&clnt_address_size);
+			printf("[%s] from %s:",receive_message,inet_ntoa(clnt_address.sin_addr));
+			memset(receive_message,0,sizeof(receive_message));
+			ssize_t Received_num = recvfrom(serv_socket , receive_message , BUFSIZE , 0 , (struct sockaadr *)&clnt_address , &clnt_address_size);
+
 			if(strcmp(receive_message , "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
 			printf("Chat is over \n");
 			return 0;
 			}
-			printf("[client]from %s : %s\n" ,inet_ntoa(clnt_address.sin_addr) , receive_message);
+
+			printf("%s\n" ,receive_message);
 
 			memset(receive_message , 0 , sizeof(receive_message));
 			memset(send_message , 0 , sizeof(send_message));
 			//input message
 			printf("[server] : ");
 			fgets(send_message , BUFSIZE , stdin);
+			printf("\n");
 			ssize_t send_num = sendto(serv_socket , send_message , BUFSIZE , 0 , (struct sockaddr*)&clnt_address , sizeof(clnt_address));
 			if(send_num == -1){
 				printf("Send Error!\n");
