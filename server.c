@@ -87,7 +87,7 @@ int main(int argc , char *argv[]){
                 printf("Chatting quit!\n");
                 return 0;
             }
-            printf("[ahn]from %s : %s\n",client_name , inet_ntoa(clnt_address.sin_addr) , receive_message);
+            printf("[%s]from %s : %s\n",client_name , inet_ntoa(clnt_address.sin_addr) , receive_message);
             
             
             // init receive_message buffer , send_message buffer
