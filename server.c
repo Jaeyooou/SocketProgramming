@@ -107,7 +107,7 @@ int main(int argc , char *argv[]){
             printf("[server]:");
             fgets(send_message , BUFSIZE , stdin);
 			printf("\n");
-            if(strcmp(send_message , "q") == 0 || strcmp(send_message , "quit") == 0){
+            if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
                 printf("Chatting quit!\n");
 				close(serv_socket);
 				close(client_socket);
