@@ -48,12 +48,14 @@ int main(int argc , char *argv[]){
         
         if(bind(serv_socket , (struct sockaddr*)&serv_address , sizeof(serv_address)) == -1){
         printf("Binding error\n");
+		close(serv_socket);
         return 0;
         }
         printf("create TCP socket(%d :%d) done\n" ,htonl( INADDR_ANY) , atoi(argv[2]));
         if(listen(serv_socket ,5) == -1)
         {
             printf("Listening error\n");
+			close(serv_socket);
             return 0;
         }
         printf("Server lIstening~~~~\n");
@@ -63,12 +65,16 @@ int main(int argc , char *argv[]){
         //if accept is successed  ,func accept() returns clients socket,
         if(client_socket == -1){
             printf("accept error\n");
+			close(serv_socket);
+			close(client_socket);
             return 0;
         }
         printf("Enter Client\n");
 	memset(receive_message , 0 , sizeof(receive_message));
 	if(read(client_socket , receive_message , BUFSIZE) == -1){
 		printf("Read Error!\n");
+		close(serv_socket);
+		close(client_socket);
 		return 0;	
 }
 	strcpy(client_name , receive_message);
@@ -81,10 +87,14 @@ int main(int argc , char *argv[]){
             ssize_t Received_num = read(client_socket , receive_message , BUFSIZE);
             if(Received_num == -1){
                 printf("Read Error!\n");
+				close(serv_socket);
+				close(client_socket);
 				return 0;
             }
             if (strcmp(receive_message, "q\n") == 0 || strcmp(receive_message, "quit\n") == 0) {
                 printf("Chatting quit!\n");
+				close(serv_socket);
+				close(client_socket);
                 return 0;
             }
             printf("[%s]from %s : %s\n",client_name , inet_ntoa(clnt_address.sin_addr) , receive_message);
@@ -99,17 +109,22 @@ int main(int argc , char *argv[]){
 			printf("\n");
             if(strcmp(send_message , "q") == 0 || strcmp(send_message , "quit") == 0){
                 printf("Chatting quit!\n");
+				close(serv_socket);
+				close(client_socket);
                 return 0;
             }
             ssize_t send_num = write(client_socket , send_message , BUFSIZE);
             if(send_num == -1){
                 printf("Send Error! \n");
+				close(serv_socket);
+				close(client_socket);
                 return 0;
             }
             
             
         }
-      
+      	close(serv_socket);
+		close(client_socket);
         }
     
     
@@ -129,6 +144,7 @@ int main(int argc , char *argv[]){
   
         if(bind(serv_socket , (struct sockaddr *)&serv_address,sizeof(serv_address)) == -1){
        		 printf("Binding error\n");
+			 close(serv_socket);
          	 return 0;
         }
          
@@ -144,6 +160,7 @@ int main(int argc , char *argv[]){
 
 			if(strcmp(receive_message , "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
 			printf("Chat is over \n");
+			close(serv_socket);
 			return 0;
 			}
 
@@ -158,11 +175,13 @@ int main(int argc , char *argv[]){
 			ssize_t send_num = sendto(serv_socket , send_message , BUFSIZE , 0 , (struct sockaddr*)&clnt_address , sizeof(clnt_address));
 			if(send_num == -1){
 				printf("Send Error!\n");
+				close(serv_socket);
 				return 0;
 			}
 			
 			if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
 				printf("chat is over!\n");
+				close(serv_socket);
 				return 0;
 				}
 					

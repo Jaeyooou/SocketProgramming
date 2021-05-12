@@ -39,12 +39,14 @@ int main(int argc , char *argv[]){
         
         if(connect(clnt_socket , (struct sockaddr*)&serv_address , sizeof(serv_address)) == -1){
         printf("Connection error\n");
+		close(clnt_socket);
         return 0;
         }
 	memset(send_message , 0 , BUFSIZE);
 	strcpy(send_message , name);
 	if(write(clnt_socket , send_message , BUFSIZE) == -1){
 		printf("Write Error!\n");
+		close(clnt_socket);
 		return 0;
 		}	
         printf("chatting start , if you want to exit input 'q' or 'quit' \n");
@@ -56,22 +58,26 @@ int main(int argc , char *argv[]){
 			printf("\n");
             if(strcmp(send_message , "quit") == 0 || strcmp(send_message , "q") == 0){
                 printf("chatting is over\n");
+				close(clnt_socket);
                 return 0;
             }
             send_len = strlen(send_message);
             ssize_t send_num = write(clnt_socket , send_message , BUFSIZE);
             if(send_num == -1){
                 printf("Write Error!\n");
+				close(clnt_socket);
                 return 0;
             }
 			ssize_t read_num = read(clnt_socket , receive_message , BUFSIZE);
 	
 			if(read_num == -1){
 				printf("Read Error\n");
+				close(clnt_socket);
 				return 0;
 			}
             if(strcmp(receive_message , "quit\n") == 0 || strcmp(receive_message , "q\n") == 0){
                 printf("chatting is over\n");
+				close(clnt_socket);
                 return 0;
             }
             printf("[server]%s: %s\n",inet_ntoa(serv_address.sin_addr) , receive_message);
@@ -104,15 +110,18 @@ int main(int argc , char *argv[]){
 			
 			if(strcmp(send_message , "q\n") == 0 || strcmp(send_message , "quit\n") == 0){
 				printf("chat is over!\n");
+				close(clnt_socket);
 				return 0;
 			}
 			if(send_num == -1){
 				printf("Write Error!\n");
+				close(clnt_socket);
 				return 0;
 			}
 			ssize_t read_num = read(clnt_socket , receive_message , BUFSIZE);
 			if(strcmp(receive_message,  "q\n") == 0 || strcmp(receive_message , "quit\n") == 0){
 				printf("chat is over!\n");
+				close(clnt_socket);
 				return 0;
 			}
 			printf("[server]:%s : %s\n",inet_ntoa(serv_address.sin_addr) , receive_message);
